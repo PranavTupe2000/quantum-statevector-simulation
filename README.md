@@ -1,0 +1,3 @@
+**Statevector Quantum Circuit Simulator**
+
+This project implements a statevector simulator for quantum circuits, showcasing the simulation of quantum states through matrix and tensor operations. The aim is to demystify quantum computing by building a simulator from scratch, focusing on how quantum gates transform qubit states in statevector form. This project is part of the QOSF Mentorship Program screening task.
