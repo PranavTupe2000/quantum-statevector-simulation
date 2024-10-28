@@ -1,31 +1,17 @@
 import numpy as np
 
+""" Contains definitions for standard quantum gates using matrix representations """
 class Gates:
-    """
-    Contains definitions for standard quantum gates using matrix representations.
-    """
     # Define basic quantum gates as class variables
-    I = np.array([[1, 0], [0, 1]] )  # Identity Gate
-    X = np.array([[0, 1], [1, 0]] )  # Pauli-X (NOT) Gate
-    Y = np.array([[0, -1j], [1j, 0]] )  # Pauli-Y Gate
-    Z = np.array([[1, 0], [0, -1]] )  # Pauli-Z Gate
+    I = np.array([[1, 0], [0, 1]] )
+    X = np.array([[0, 1], [1, 0]] )
+    Y = np.array([[0, -1j], [1j, 0]] )
+    Z = np.array([[1, 0], [0, -1]] )
     H = (1 / np.sqrt(2)) * np.array([[1, 1], [1, -1]] )  # Hadamard Gate
     CNOT = np.array([[1, 0, 0, 0],
                      [0, 1, 0, 0],
                      [0, 0, 0, 1],
-                     [0, 0, 1, 0]] )  # CNOT Gate (2-qubit gate)
-    
-    @staticmethod
-    def getGate(var_name):
-        # Check if the variable exists in the class
-        if hasattr(Gates, var_name.upper()):
-            return getattr(Gates, var_name.upper())
-        else:
-            raise ValueError(f"Gate '{var_name}' does not exist.")
-
-# Example usage for importing and using the gates
-if __name__ == "__main__":
-    print(Gates.getGate('H'))
+                     [0, 0, 1, 0]] )
 
 
 

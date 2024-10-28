@@ -1,14 +1,16 @@
 import numpy as np
 from gates import Gates
+ 
 
-class ValidationException(Exception):
-    def __init__(self, message):
-        super().__init__(message)
-        
+""" Convert gate matrix to a full matrix by using kronecker product. """    
 def compute_kronecker_product(gate, target_qubit, num_qubits):
     full_gate = 1
+    
+    # Loop over each qubit position in the circuit
     for i in range(num_qubits):
+        # Apply the specified gate on the target qubit and identity on others
         full_gate = np.kron(full_gate, gate if i == target_qubit else Gates.I)
+    
     return full_gate
 
 
