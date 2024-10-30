@@ -14,6 +14,18 @@ def compute_kronecker_product(gate, target_qubit, num_qubits):
     return full_gate
 
 
+""" Convert gate matrix to full operator for expected value """    
+def compute_kronecker_product_with_itself(gate, num_qubits):
+    operator = 1
+    
+    # Loop over each qubit in the circuit
+    for i in range(num_qubits):
+        # Apply the specific gate for the number of qubits
+        operator = np.kron(operator, gate)
+    
+    return operator
+
+
 
 
 
