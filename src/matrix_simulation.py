@@ -1,6 +1,7 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from gates import Gates
-from utils import compute_kronecker_product
+from utils import compute_kronecker_product, compute_kronecker_product_with_itself
 
 class NaiveQuantumCircuit:
     """ Initialize the state vector for n qubits in the |0...0⟩ state """
@@ -31,4 +32,44 @@ class NaiveQuantumCircuit:
         
         # Returning a dictinory containing the probability distribution each quantum state
         return {f"|{i:0{self.num_qubits}b}>": round(probabilities[i], round_off) for i in range(len(probabilities))}
+    
+    """Measures the qubits, returning a probabilistic result."""
+    def measure(self):
+        # Squaring the amplitudes of the states
+        probabilities = np.abs(self.state) ** 2
+        
+        # Selecting randomly based on probabilities
+        measurement_result = np.random.choice(2 ** self.num_qubits, p=probabilities)
+        return format(measurement_result, f'0{self.num_qubits}b')
+    
+    """Visualizes a quantum state vector as a histogram of probabilities."""
+    def visualize_state(self):
+        # Squaring the amplitudes of the states
+        probabilities = np.abs(self.state) ** 2
+        
+        # Generate state labels in binary format, e.g., |00>, |01>, etc.
+        state_labels = [f"|{i:0{self.num_qubits}b}⟩" for i in range(len(probabilities))]
+        
+        # Create the bar plot with state labels
+        plt.bar(state_labels, probabilities)
+        plt.xlabel('State')
+        plt.ylabel('Probability')
+        plt.title('Quantum State Probabilities')
+        plt.show()
+        
+    """Compute the expectation value of the operator with respect to the given state."""
+    def expectation_value(self, gate):
+        # Expand the single-qubit gate to the operator (full gate)
+        operator = compute_kronecker_product_with_itself(gate, self.num_qubits)
+        
+        # Apply operator on the state
+        # Compute Op|Ψ⟩
+        operator_dot_state = np.dot(operator, self.state)
+        
+        # Take conjugate transpose of the state
+        # Compute ⟨Ψ|
+        state_bra = np.conj(self.state).T
+        
+        # Compute ⟨Ψ|Op|Ψ⟩
+        return round(np.real(np.dot(state_bra, operator_dot_state)), 2)          
         

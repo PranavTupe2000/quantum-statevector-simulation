@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from gates import Gates
 
 class AdvanceQuantumCircuit:
@@ -12,10 +13,9 @@ class AdvanceQuantumCircuit:
         
     """ Apply single-qubit gate to a specific qubit """
     def apply_single_qubit_gate(self, gate, qubit):
-        # Reshape gate into a tensor and apply using tensordot
-        gate_tensor = np.reshape(gate, [2, 2])
+        # Performing tensor contraction
         axes = [[1], [qubit]]
-        self.state = np.tensordot(gate_tensor, self.state, axes=axes)
+        self.state = np.tensordot(gate, self.state, axes=axes)
         
         # Move the qubit axis back to its original position
         self.state = np.moveaxis(self.state, 0, qubit)
@@ -42,3 +42,49 @@ class AdvanceQuantumCircuit:
         # Returning a dictinory containing the probability distribution each quantum state
         return {f"|{i:0{self.num_qubits}b}>": round(probabilities[i], round_off) for i in range(len(probabilities))}
 
+    """Measures the qubits, returning a probabilistic result."""
+    def measure(self):
+        # Flatten the tensor
+        state = self.state.flatten()
+        
+        # Squaring the amplitudes of the states
+        probabilities = np.abs(state) ** 2
+        
+        # Selecting randomly based on probabilities
+        measurement_result = np.random.choice(2 ** self.num_qubits, p=probabilities)
+        return format(measurement_result, f'0{self.num_qubits}b')
+    
+    """Visualizes a quantum state vector as a histogram of probabilities."""
+    def visualize_state(self):
+        # Flatten the tensor
+        state = self.state.flatten()
+        
+        # Squaring the amplitudes of the states
+        probabilities = np.abs(state) ** 2
+        
+        # Generate state labels in binary format, e.g., |00>, |01>, etc.
+        state_labels = [f"|{i:0{self.num_qubits}b}⟩" for i in range(len(probabilities))]
+        
+        # Create the bar plot with state labels
+        plt.bar(state_labels, probabilities)
+        plt.xlabel('State')
+        plt.ylabel('Probability')
+        plt.title('Quantum State Probabilities')
+        plt.show()
+        
+    """Compute the expectation value of the operator with respect to the given state."""
+    def expectation_value(self, gate):
+        # Initialize the contracted state tensor to use for contractions
+        contracted_state = self.state
+        
+        # Loop over each qubit to apply the operator with tensor contraction
+        for qubit in range(self.num_qubits):
+            # Contract the operator with the state along the specified qubit's axis
+            contracted_state = np.tensordot(gate, contracted_state, axes=([1], [qubit]))
+            # Move the contracted axis back to the original position
+            contracted_state = np.moveaxis(contracted_state, 0, qubit)
+        
+        # Calculate the expectation value as a contraction between the original and contracted state tensors
+        expectation_value = np.tensordot(np.conj(self.state), contracted_state, axes=self.num_qubits)
+        return round(np.real(expectation_value.item()), 2)
+        
