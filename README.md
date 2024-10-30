@@ -22,6 +22,7 @@ This project is a part of screening task for Quantum Computing Mentorship Progra
 - [Implementation Details](#implementation-details)
 - [Usage](#usage)
 - [Performance Analysis](#performance-analysis)
+- [Bonus](#bonus)
 
 ---
 
@@ -124,4 +125,11 @@ The analysis has been carried out in **[notebooks/analysis.ipynb](./notebooks/an
 - The tensor simulation can simulate upto **29 qubits**.
 
 
+## Bonus
 
+The bonus questions of the screening task has been implemented in **[notebooks/bonus_questions.ipynb](./notebooks/bonus_questions.ipynb)** notebook. The notebook contains:
+
+- Sampling from Final States
+- Expectation Values
+
+The main functions of these tasks i.e. `measure()` and `expectation_value(gate)` are updated in both the files **[src/matrix_simulation.py](./src/matrix_simulation.py)** and **[src/tensor_simulation.py](./src/tensor_simulation.py)**.
